@@ -1,5 +1,13 @@
 // create todo list using es6 js classes
 
+// listeners
+const submitBtn = document.querySelector('#submit');
+const todoVal = document.querySelector('#todoInput');
+
+submitBtn.addEventListener('click', () => {
+    new Todo(todoVal.value, 'high');
+});
+
 // todo 
 
 class Todo {
@@ -67,20 +75,39 @@ class Render {
         this.todo = todo;
         this.todoWrapper = document.querySelector('.todo-wrapper');
 
-        this.genTodoUi();
+        this.genTodoUi(todo);
     }
 
-    genTodoUi() {
+    genTodoUi({ id, title, status, priority, comments }) {
         const todoDiv = document.createElement('div');
-        const contentDiv = document.createElement('div');
-        contentDiv.innerHTML = 'HELLO'
+        const _content = document.createElement('div');
+        const _status = document.createElement('div');
+        const _priority = document.createElement('div');
+        const _comments = document.createElement('div');
 
-        this.todoWrapper.appendChild(contentDiv);
-        const content = document.createElement('div');
-        const status = document.createElement('div');
-        const priority = document.createElement('div');
-        const comments = document.createElement('div');
+        // setup element classes and attributes
+        this._addAttribute(todoDiv, 'uid', id);
+        this._addClass(_content, 'todo-content');
+        this._addClass(_status, 'todo-status');
+        this._addClass(_priority, 'todo-priority');
+        this._addClass(_comments, 'todo-comments');
+
+        _content.innerHTML = title;
+        _status.innerHTML = status;
+        _priority.innerHTML = priority;
+        _comments.innerHTML = comments;
+
+        const data = [_content, _status, _priority, _comments];
+        // append todo data
+        data.forEach(d => todoDiv.appendChild(d));
+        this.todoWrapper.appendChild(todoDiv);
+    }
+
+    _addClass(element, className) {
+        element.classList.add(className);
+    }
+
+    _addAttribute(element, name, val) {
+        element.setAttribute(name, val);
     }
 }
-
-console.log(new Todo('test', 'high'))
