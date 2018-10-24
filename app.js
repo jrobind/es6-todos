@@ -8,6 +8,28 @@ submitBtn.addEventListener('click', () => {
     new Todo(todoVal.value, 'high');
 });
 
+// todo store
+
+class Store {
+    constructor() {
+        this.todos = [];
+    }
+
+    _addTodo(todo) {
+        this.todos.push(todo);
+    }
+
+    _removeTodo(id) {
+        let i;
+        this.todos.forEach((todo, index) => i = todo.id === id ? index : null);
+        // remove comment using index
+        this.todos.splice(i, 1);
+    }
+}
+
+// intiate store
+const store = new Store();
+
 // todo 
 
 class Todo {
@@ -18,6 +40,7 @@ class Todo {
         this.priority = priority;
         this.comments = [];
 
+        store._addTodo(this);
         new Render(this);
     }
 
@@ -96,10 +119,9 @@ class Render {
         _status.innerHTML = status;
         _priority.innerHTML = priority;
         _comments.innerHTML = comments;
-
-        const data = [_content, _status, _priority, _comments];
+        
         // append todo data
-        data.forEach(d => todoDiv.appendChild(d));
+        [_content, _status, _priority, _comments].forEach(d => todoDiv.appendChild(d));
         this.todoWrapper.appendChild(todoDiv);
     }
 
@@ -109,5 +131,13 @@ class Render {
 
     _addAttribute(element, name, val) {
         element.setAttribute(name, val);
+    }
+
+    _reset(type) {
+        if (type === 'input') {
+            document.querySelector('input').value = '';
+        } else {
+            this.todoWrapper.innerHTML = '';
+        }
     }
 }
