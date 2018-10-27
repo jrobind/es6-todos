@@ -25,6 +25,21 @@ class Store {
         // remove comment using index
         this.todos.splice(i, 1);
     }
+
+    _filter({ status, priority }) {
+        if (status) {
+            // filter by todo staus
+            const filtered = this.todos.filter(todo => todo.status === status);
+            // render each filtered todo to ui
+            filtered.forEach(todo => new Render(todo));
+
+        } else {
+            // filter by todo priority
+            const filtered = this.todos.filter(todo => todo.priority === priority);
+            // render each filtered todo to ui
+            filtered.forEach(todo => new Render(todo));
+        }
+    }
 }
 
 // intiate store
@@ -41,7 +56,7 @@ class Todo {
         this.comments = [];
 
         store._addTodo(this);
-        new Render(this);
+        new Render(store.todos);
     }
 
     genRandomId() {
@@ -94,11 +109,11 @@ class Todo {
 // render class
 
 class Render {
-    constructor(todo) {
-        this.todo = todo;
+    constructor(todos) {
+        this.todos = todos;
         this.todoWrapper = document.querySelector('.todo-wrapper');
 
-        this.genTodoUi(todo);
+        this.todos.forEach(todo => this.genTodoUi(todo));
     }
 
     genTodoUi({ id, title, status, priority, comments }) {
