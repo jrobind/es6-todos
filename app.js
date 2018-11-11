@@ -31,13 +31,13 @@ class Store {
             // filter by todo staus
             const filtered = this.todos.filter(todo => todo.status === status);
             // render each filtered todo to ui
-            filtered.forEach(todo => new Render(todo));
+            new Render(filtered);
 
         } else {
             // filter by todo priority
             const filtered = this.todos.filter(todo => todo.priority === priority);
             // render each filtered todo to ui
-            filtered.forEach(todo => new Render(todo));
+            new Render(filtered);
         }
     }
 }
@@ -118,7 +118,7 @@ class Render {
         this.todo = todo;
         this.todoWrapper = document.querySelector('.todo-wrapper');
 
-        this.genTodoUi(todo);
+        Array.isArray(todo) ? this.todo.forEach(todo => this.genTodoUi(todo)) : this.genTodoUi(todo);
     }
 
     genTodoUi({ id, title, status, priority, comments }) {
@@ -127,6 +127,8 @@ class Render {
         const _status = document.createElement('div');
         const _priority = document.createElement('div');
         const _comments = document.createElement('div');
+
+        this._reset('input');
 
         // setup element classes and attributes
         this._addAttribute(todoDiv, 'uid', id);
