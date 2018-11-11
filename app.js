@@ -74,9 +74,14 @@ class Todo {
 
     setPriority(newPriority) {
         switch(newPriority) {
-            case 'low': this.priority = 'low';
-            case 'medium': this.priority = 'medium';
-            case 'high': this.priority = 'high';
+            case 'low': 
+                this.priority = 'low';
+                break;
+            case 'medium': 
+                this.priority = 'medium';
+                break;
+            case 'high': 
+                this.priority = 'high';
         }
     }
 
