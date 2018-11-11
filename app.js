@@ -56,7 +56,7 @@ class Todo {
         this.comments = [];
 
         store._addTodo(this);
-        new Render(store.todos);
+        new Render(this);
     }
 
     genRandomId() {
@@ -109,11 +109,11 @@ class Todo {
 // render class
 
 class Render {
-    constructor(todos) {
-        this.todos = todos;
+    constructor(todo) {
+        this.todo = todo;
         this.todoWrapper = document.querySelector('.todo-wrapper');
 
-        this.todos.forEach(todo => this.genTodoUi(todo));
+        this.genTodoUi(todo);
     }
 
     genTodoUi({ id, title, status, priority, comments }) {
