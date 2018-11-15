@@ -29,13 +29,13 @@ class Store {
     _filter({ status, priority }) {
         if (status) {
             // filter by todo staus
-            const filtered = this.todos.filter(todo => todo.status === status);
+            const filtered = this.todos.filter(todo => todo.status === status.toLowerCase());
             // render each filtered todo to ui
             new Render(filtered);
 
         } else {
             // filter by todo priority
-            const filtered = this.todos.filter(todo => todo.priority === priority);
+            const filtered = this.todos.filter(todo => todo.priority === priority.toLowerCase());
             // render each filtered todo to ui
             new Render(filtered);
         }
@@ -118,7 +118,12 @@ class Render {
         this.todo = todo;
         this.todoWrapper = document.querySelector('.todo-wrapper');
 
-        Array.isArray(todo) ? this.todo.forEach(todo => this.genTodoUi(todo)) : this.genTodoUi(todo);
+        if (Array.isArray(todo)) {
+            this._reset();
+            this.todo.forEach(todo => this.genTodoUi(todo));
+        } else {
+            this.genTodoUi(todo);
+        }
     }
 
     genTodoUi({ id, title, status, priority, comments }) {
