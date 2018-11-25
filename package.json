@@ -1,0 +1,28 @@
+{
+  "name": "es6todos",
+  "version": "1.0.0",
+  "description": "Todo list built with es6",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrobind/es6-todos.git"
+  },
+  "author": "James Robinson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jrobind/es6-todos/issues"
+  },
+  "homepage": "https://github.com/jrobind/es6-todos#readme",
+  "dependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1",
+    "gulp-watch": "^5.0.1"
+  }
+}
