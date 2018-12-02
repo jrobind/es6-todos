@@ -10,15 +10,14 @@ const gulp = require('gulp');
 sass.compiler = require('node-sass');
 
 // compile sass
-gulp.task('sass', function () {
+gulp.task('sass', () =>  {
     return gulp.src('./style.scss')
       .pipe(sass().on('error', sass.logError))
       .pipe(gulp.dest('./css'));
   });
-   
-gulp.task('sass:watch', function () {
-    gulp.watch('./sass/**/*.scss', ['sass']);
-});
+
+// watch sass files
+gulp.task('watch', () => gulp.watch('./style.scss', ['sass']));
 
 // // minify scripts 
 // gulp.task('minify-scripts', function() {
@@ -36,11 +35,6 @@ gulp.task('sass:watch', function () {
 //         .pipe(gulp.dest('./dist/styles'));
 // });
 
-// // watch files
-// gulp.task('watch', function() {
-//    gulp.watch('./*.js', './*.css'); 
-// });
-
 // // clean
 // gulp.task('clean', function() {
 //     del('./dist')
@@ -49,6 +43,4 @@ gulp.task('sass:watch', function () {
 // build
 gulp.task('build', ['sass']);
 
-gulp.task('default', function() {
-   gulp.start('build'); 
-});
+gulp.task('default', () => gulp.start('build'));

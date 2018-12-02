@@ -18,7 +18,7 @@
   "homepage": "https://github.com/jrobind/es6-todos#readme",
   "dependencies": {
     "del": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "3.9.1",
     "gulp-clean-css": "^4.0.0",
     "gulp-rename": "^1.4.0",
     "gulp-sourcemaps": "^2.6.4",
