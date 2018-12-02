@@ -1,18 +1,36 @@
 // create todo list using es6 js classes
 
-// listeners
-const submitBtn = document.querySelector('#submit');
-const todoVal = document.querySelector('#todoInput');
-
-submitBtn.addEventListener('click', () => {
-    new Todo(todoVal.value, 'high');
-});
+// initiate store on page load
+document.addEventListener('DOMContentLoaded', () => new Store());
 
 // todo store
 
 class Store {
     constructor() {
         this.todos = [];
+
+        this.todoInput = document.querySelector('input');
+        this.todoVal = document.querySelector('#todoInput');
+
+        this.setupListeners_();
+    }
+
+    setupListeners_() {
+        this.todoInput.addEventListener('keydown', (e) => { 
+            event.stopPropagation();
+            if (e.keyCode === 13) { new Todo(this.todoVal.value, 'high'); }
+        });
+    }
+
+    getTodoInfo_(query) {
+        switch(query) {
+            case 'total': 
+                return this.todos.length;
+            case 'total-completed': 
+                return this.todos.filter(todo => todo.status).length;
+            case 'total-uncompleted': 
+            return this.todos.filter(todo => !todo.status).length;
+        }
     }
 
     _addTodo(todo) {
@@ -24,6 +42,10 @@ class Store {
         this.todos.forEach((todo, index) => i = todo.id === id ? index : null);
         // remove comment using index
         this.todos.splice(i, 1);
+    }
+
+    _removeAllTodos() {
+        this.todos.length = 0;
     }
 
     _filter({ status, priority }) {
@@ -137,6 +159,8 @@ class Render {
 
         // setup element classes and attributes
         this._addAttribute(todoDiv, 'uid', id);
+        this._addAttribute(todoDiv, 'priority', priority);
+        this._addClass(todoDiv, 'todo');
         this._addClass(_content, 'todo-content');
         this._addClass(_status, 'todo-status');
         this._addClass(_priority, 'todo-priority');
