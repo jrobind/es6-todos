@@ -1,4 +1,4 @@
 # es6-todos
 
 * Set up tests
-* Fix todos being rendered twice
+* Persist todos to Local Storage

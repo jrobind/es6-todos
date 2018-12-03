@@ -1,25 +1,23 @@
 // create todo list using es6 js classes
 
 // initiate store on page load
-document.addEventListener('DOMContentLoaded', () => new Store());
+document.addEventListener('DOMContentLoaded', () => {
+    const todoInput = document.querySelector('input');
+    const todoVal = document.querySelector('#todoInput');
+    // initiate store
+    new Store();
+    // setup listeners
+    todoInput.addEventListener('keydown', (e) => { 
+        e.stopPropagation();
+        if (e.keyCode === 13) { new Todo(todoVal.value, 'high'); }
+    });
+});
 
 // todo store
 
 class Store {
     constructor() {
         this.todos = [];
-
-        this.todoInput = document.querySelector('input');
-        this.todoVal = document.querySelector('#todoInput');
-
-        this.setupListeners_();
-    }
-
-    setupListeners_() {
-        this.todoInput.addEventListener('keydown', (e) => { 
-            event.stopPropagation();
-            if (e.keyCode === 13) { new Todo(this.todoVal.value, 'high'); }
-        });
     }
 
     getTodoInfo_(query) {
@@ -64,20 +62,19 @@ class Store {
     }
 }
 
-// intiate store
-const store = new Store();
 
 // todo 
 
-class Todo {
+class Todo extends Store {
     constructor(title, priority) {
+        super();
         this.id = this.genRandomId();
-        this.title = title;
+        this.title = !title ? 'Untitled' : title;
         this.status = false;
         this.priority = priority;
         this.comments = [];
-
-        store._addTodo(this);
+        // add todo to Store
+        this._addTodo(this);
         new Render(this);
     }
 
