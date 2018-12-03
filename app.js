@@ -16,8 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // todo store
 
 class Store {
-    constructor() {
+    constructor(check) {
         this.todos = [];
+
+        !check ? this.initialiseStore_() : null;
     }
 
     getTodoInfo_(query) {
@@ -31,8 +33,31 @@ class Store {
         }
     }
 
+    initialiseStore_() {
+       if (!localStorage.getItem('store')) {
+            localStorage.setItem('store', JSON.stringify({todos: []}));
+       } else {
+           // retrieve stored todos
+           const todoCached = JSON.parse(localStorage.getItem('store'));
+           todoCached.todos.forEach(todo => new Render(todo));
+       }
+    }
+
+    updateStorage_({ id, title, status, priority, comments }) {
+        const cachedTodos = JSON.parse(localStorage.getItem('store'));
+        cachedTodos.todos.push({
+            id,
+            title,
+            status,
+            priority,
+            comments
+        })
+        localStorage.setItem('store', JSON.stringify(cachedTodos));
+    }
+
     _addTodo(todo) {
         this.todos.push(todo);
+        this.updateStorage_(todo);
     }
 
     _removeTodo(id) {
@@ -67,7 +92,7 @@ class Store {
 
 class Todo extends Store {
     constructor(title, priority) {
-        super();
+        super(true);
         this.id = this.genRandomId();
         this.title = !title ? 'Untitled' : title;
         this.status = false;
