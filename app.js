@@ -52,6 +52,7 @@ class Store {
             priority,
             comments
         })
+        // set updated todos
         localStorage.setItem('store', JSON.stringify(cachedTodos));
     }
 
@@ -86,7 +87,6 @@ class Store {
         }
     }
 }
-
 
 // todo 
 
@@ -172,6 +172,7 @@ class Render {
 
     genTodoUi({ id, title, status, priority, comments }) {
         const todoDiv = document.createElement('div');
+        const _todoRemoveBtn = document.createElement('button');
         const _content = document.createElement('div');
         const _status = document.createElement('div');
         const _priority = document.createElement('div');
@@ -188,13 +189,14 @@ class Render {
         this._addClass(_priority, 'todo-priority');
         this._addClass(_comments, 'todo-comments');
 
+        _todoRemoveBtn.innerText = 'x';
         _content.innerHTML = title;
         _status.innerHTML = status;
         _priority.innerHTML = priority;
         _comments.innerHTML = comments;
         
         // append todo data
-        [_content, _status, _priority, _comments].forEach(d => todoDiv.appendChild(d));
+        [_todoRemoveBtn, _content, _status, _priority, _comments].forEach(d => todoDiv.appendChild(d));
         this.todoWrapper.appendChild(todoDiv);
     }
 
