@@ -107,8 +107,10 @@ class Store {
 
 // todo 
 
-class Todo {
+class Todo extends Store {
     constructor(title, priority) {
+        super(true);
+
         this.id = this.genRandomId();
         this.title = !title ? 'Untitled' : title;
         this.status = false;
@@ -173,8 +175,10 @@ class Todo {
 
 // render class
 
-class Render {
+class Render extends Store {
     constructor(todo) {
+        super(true);
+
         this.todo = todo;
         this.todoWrapper = document.querySelector('.todo-wrapper');
 
