@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         if (e.keyCode === 13) { new Todo(todoVal.value, 'high'); }
     });
-
-    // removeBtn.addEventListener('click', (e)) {};
 });
 
 // todo store
@@ -25,8 +23,6 @@ class Store {
         this.todos = [];
 
         !check ? this._initialiseStore() : null;
-
-        this._addTodo = this._addTodo.bind(this);
     }
 
     getTodoInfo_(query) {
@@ -46,23 +42,30 @@ class Store {
        } else {
            // retrieve stored todos
            const todoCached = JSON.parse(localStorage.getItem('store'));
-           todoCached.todos.forEach(todo => new Render(todo));
+           todoCached.todos.length ? todoCached.todos.forEach(todo => new Render(todo)) : null;
            // update store
            this.todos = todoCached.todos;
        }
     }
 
-    _updateStorage({ id, title, status, priority, comments }) {
-        const cachedTodos = JSON.parse(localStorage.getItem('store'));
-        cachedTodos.todos.push({
-            id,
-            title,
-            status,
-            priority,
-            comments
-        })
-        // set updated todos
-        localStorage.setItem('store', JSON.stringify(cachedTodos));
+    _updateStorage(todos) {
+        let cachedTodos = JSON.parse(localStorage.getItem('store'));
+
+        if (!Array.isArray(todos)) {
+            const { id, title, status, priority, comments } = todos;
+            cachedTodos.todos.push({
+                id,
+                title,
+                status,
+                priority,
+                comments
+            })
+            // set updated todos
+            localStorage.setItem('store', JSON.stringify(cachedTodos));
+        } else {
+            cachedTodos.todos = todos;
+            localStorage.setItem('store', JSON.stringify(cachedTodos));
+        }
     }
 
     _addTodo(todo) {
@@ -71,10 +74,15 @@ class Store {
     }
 
     _removeTodo(id) {
-        let i;
-        this.todos.forEach((todo, index) => i = todo.id === id ? index : null);
-        // remove comment using index
-        this.todos.splice(i, 1);
+        for (let i = this.todos.length -1; i >= 0; i--) {
+            if (this.todos[i].id === Number(id)) {
+                this.todos.splice(i, 1);
+            }
+        }
+
+        this._updateStorage(this.todos);
+        // render updated todos
+        new Render(this.todos);
     }
 
     _removeAllTodos() {
@@ -99,16 +107,15 @@ class Store {
 
 // todo 
 
-class Todo extends Store {
+class Todo {
     constructor(title, priority) {
-        super(true);
         this.id = this.genRandomId();
         this.title = !title ? 'Untitled' : title;
         this.status = false;
         this.priority = priority;
         this.comments = [];
         // add todo to Store
-        this._addTodo(this);
+        store._addTodo(this);
         new Render(this);
     }
 
@@ -173,7 +180,8 @@ class Render {
 
         if (Array.isArray(todo)) {
             this._reset();
-            this.todo.forEach(todo => this.genTodoUi(todo));
+            // stop if todos array is empty
+            todo.length ? this.todo.forEach(todo => this.genTodoUi(todo)) : null;
         } else {
             this.genTodoUi(todo);
         }
@@ -198,6 +206,9 @@ class Render {
         this._addClass(_status, 'todo-status');
         this._addClass(_priority, 'todo-priority');
         this._addClass(_comments, 'todo-comments');
+
+        // setup listeners
+        _todoRemoveBtn.addEventListener('click', (e) => store._removeTodo(e.currentTarget.parentElement.getAttribute('uid')));
 
         _todoRemoveBtn.innerText = 'x';
         _content.innerHTML = title;
