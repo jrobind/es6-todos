@@ -2,6 +2,21 @@ body {
   background: #f7f9fa;
   font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; }
 
+.info-widget {
+  background: white;
+  position: absolute;
+  top: 5%;
+  right: 0;
+  padding: 15px;
+  z-index: 1;
+  border-radius: 5px; }
+  .info-widget div {
+    margin: 5px 0; }
+
+.info-widget.show {
+  right: 0;
+  transition: right .2s linear; }
+
 .wrapper {
   background: white;
   margin: 5% 10%;
