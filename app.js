@@ -4,13 +4,18 @@
 document.addEventListener('DOMContentLoaded', () => {
     const todoInput = document.querySelector('input');
     const todoVal = document.querySelector('#todoInput');
+    const removeBtn = document.querySelector('.remove-btn');
+
     // initiate store
-    new Store();
+    window.store = new Store();
+
     // setup listeners
     todoInput.addEventListener('keydown', (e) => { 
         e.stopPropagation();
         if (e.keyCode === 13) { new Todo(todoVal.value, 'high'); }
     });
+
+    // removeBtn.addEventListener('click', (e)) {};
 });
 
 // todo store
@@ -19,7 +24,9 @@ class Store {
     constructor(check) {
         this.todos = [];
 
-        !check ? this.initialiseStore_() : null;
+        !check ? this._initialiseStore() : null;
+
+        this._addTodo = this._addTodo.bind(this);
     }
 
     getTodoInfo_(query) {
@@ -33,17 +40,19 @@ class Store {
         }
     }
 
-    initialiseStore_() {
+    _initialiseStore() {
        if (!localStorage.getItem('store')) {
             localStorage.setItem('store', JSON.stringify({todos: []}));
        } else {
            // retrieve stored todos
            const todoCached = JSON.parse(localStorage.getItem('store'));
            todoCached.todos.forEach(todo => new Render(todo));
+           // update store
+           this.todos = todoCached.todos;
        }
     }
 
-    updateStorage_({ id, title, status, priority, comments }) {
+    _updateStorage({ id, title, status, priority, comments }) {
         const cachedTodos = JSON.parse(localStorage.getItem('store'));
         cachedTodos.todos.push({
             id,
@@ -58,7 +67,7 @@ class Store {
 
     _addTodo(todo) {
         this.todos.push(todo);
-        this.updateStorage_(todo);
+        this._updateStorage(todo);
     }
 
     _removeTodo(id) {
@@ -183,6 +192,7 @@ class Render {
         // setup element classes and attributes
         this._addAttribute(todoDiv, 'uid', id);
         this._addAttribute(todoDiv, 'priority', priority);
+        this._addClass(_todoRemoveBtn, 'remove-btn');
         this._addClass(todoDiv, 'todo');
         this._addClass(_content, 'todo-content');
         this._addClass(_status, 'todo-status');
