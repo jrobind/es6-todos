@@ -69,6 +69,14 @@ body {
             padding: 15px;
         }
     }
+
+    .todo-wrapper[hide] {
+        display: none;
+    }
+
+    .todo-wrapper[show] {
+        display: block;
+    }
 }
 
 

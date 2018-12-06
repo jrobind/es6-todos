@@ -51,3 +51,7 @@ body {
       margin: 4px 10%;
       border: 1px solid rgba(0, 0, 0, 0.2);
       padding: 15px; }
+  .wrapper .todo-wrapper[hide] {
+    display: none; }
+  .wrapper .todo-wrapper[show] {
+    display: block; }

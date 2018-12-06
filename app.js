@@ -116,7 +116,7 @@ class Todo extends Store {
         this.status = false;
         this.priority = priority;
         this.comments = [];
-        // add todo to Store
+        // add todo to store
         store._addTodo(this);
         new Render(this);
     }
@@ -178,14 +178,19 @@ class Todo extends Store {
 class Render extends Store {
     constructor(todo) {
         super(true);
-
-        this.todo = todo;
+        console.log(this)
         this.todoWrapper = document.querySelector('.todo-wrapper');
+        this.todo = todo;
 
         if (Array.isArray(todo)) {
             this._reset();
             // stop if todos array is empty
             todo.length ? this.todo.forEach(todo => this.genTodoUi(todo)) : null;
+
+            if (!todo.length) {
+                this._toggleAttribute(this.todoWrapper, 'show', 'remove');
+                this._toggleAttribute(this.todoWrapper, 'hide', 'add', 'true');
+            }
         } else {
             this.genTodoUi(todo);
         }
@@ -202,14 +207,14 @@ class Render extends Store {
         this._reset('input');
 
         // setup element classes and attributes
-        this._addAttribute(todoDiv, 'uid', id);
-        this._addAttribute(todoDiv, 'priority', priority);
-        this._addClass(_todoRemoveBtn, 'remove-btn');
-        this._addClass(todoDiv, 'todo');
-        this._addClass(_content, 'todo-content');
-        this._addClass(_status, 'todo-status');
-        this._addClass(_priority, 'todo-priority');
-        this._addClass(_comments, 'todo-comments');
+        this._toggleAttribute(todoDiv, 'uid', 'add', id,);
+        this._toggleAttribute(todoDiv, 'priority', 'add', priority);
+        this._toggleClass(_todoRemoveBtn, 'remove-btn', 'add');
+        this._toggleClass(todoDiv, 'todo', 'add');
+        this._toggleClass(_content, 'todo-content', 'add');
+        this._toggleClass(_status, 'todo-status', 'add');
+        this._toggleClass(_priority, 'todo-priority', 'add');
+        this._toggleClass(_comments, 'todo-comments', 'add');
 
         // setup listeners
         _todoRemoveBtn.addEventListener('click', (e) => store._removeTodo(e.currentTarget.parentElement.getAttribute('uid')));
@@ -222,15 +227,22 @@ class Render extends Store {
         
         // append todo data
         [_todoRemoveBtn, _content, _status, _priority, _comments].forEach(d => todoDiv.appendChild(d));
+
+        // set attribute to todo-wrapper so we can toggle its display
+        if ( typeof store !== 'undefined') {
+            this._toggleAttribute(this.todoWrapper, 'hide', 'remove');
+            this._toggleAttribute(this.todoWrapper, 'show', 'add', 'true');
+        }
+
         this.todoWrapper.appendChild(todoDiv);
     }
 
-    _addClass(element, className) {
-        element.classList.add(className);
+    _toggleClass(element, className, toggle) {
+       toggle === 'add' ? element.classList.add(className) : element.classList.remove(className);
     }
 
-    _addAttribute(element, name, val) {
-        element.setAttribute(name, val);
+    _toggleAttribute(element, name, toggle, val) {
+        toggle === 'add' ? element.setAttribute(name, val) : element.removeAttribute(name);
     }
 
     _reset(type) {
