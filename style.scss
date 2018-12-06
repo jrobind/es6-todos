@@ -1,6 +1,13 @@
+html, body {
+    min-height: 100%;
+}
+
 body {
     background: #f7f9fa;
     font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
 }
 
 .info-widget {
@@ -25,7 +32,6 @@ body {
 .wrapper {
     background: white;
     margin: 5% 10%;
-    height: calc(100% - 10%);
     display: flex;
     flex-direction: column;
 
@@ -45,12 +51,22 @@ body {
 
     .todo-wrapper {
         background: #f7f9fa;
-        height: calc(100% - 10%);
         margin: 5% 10%;
+        flex: 1;
+
+        .todo:first-of-type {
+            margin-top: 5%;
+        }
+
+        .todo:last-of-type {
+            margin-bottom: 5%;
+        }
 
         .todo {
             background: white;
-            margin: 5% 10%;
+            margin: 4px 10%;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            padding: 15px;
         }
     }
 }
