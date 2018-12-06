@@ -178,7 +178,7 @@ class Todo extends Store {
 class Render extends Store {
     constructor(todo) {
         super(true);
-        console.log(this)
+
         this.todoWrapper = document.querySelector('.todo-wrapper');
         this.todo = todo;
 

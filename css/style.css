@@ -33,14 +33,14 @@ body {
     background: #f7f9fa;
     padding: 20px;
     min-width: 300px;
-    margin: 5% 10% 0 10%;
+    margin: 5% 10% 5% 10%;
     font-size: 22px;
     color: #414141; }
     .wrapper input::placeholder {
       opacity: .8; }
   .wrapper .todo-wrapper {
     background: #f7f9fa;
-    margin: 5% 10%;
+    margin: 0 10% 5% 10%;
     flex: 1; }
     .wrapper .todo-wrapper .todo:first-of-type {
       margin-top: 5%; }
