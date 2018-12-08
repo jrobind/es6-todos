@@ -185,7 +185,7 @@ class Render extends Store {
         if (Array.isArray(todo)) {
             this._reset();
             // stop if todos array is empty
-            todo.length ? this.todo.forEach(todo => this.genTodoUi(todo)) : null;
+            todo.length ? this.todo.forEach(todo => this._genTodoUi(todo)) : null;
 
             if (!todo.length) {
                 this._toggleAttribute(this.todoWrapper, 'show', 'remove');
@@ -196,11 +196,29 @@ class Render extends Store {
             }
 
         } else {
-            this.genTodoUi(todo);
+            this._genTodoUi(todo);
         }
     }
 
-    genTodoUi({ id, title, status, priority, comments }) {
+    _genTodoMenu() {
+        const todoMenu = document.createElement('div');
+        const all = document.createElement('div');
+        const active = document.createElement('div');
+        const completed = document.createElement('div');
+
+        this._toggleClass(todoMenu, 'todo-menu', 'add');
+
+        all.innerHTML = 'All';
+        active.innerHTML = 'Active';
+        completed.innerHTML = 'Completed';
+        
+        [all, active, completed].forEach(el => todoMenu.appendChild(el));
+        // append menu to todo wrapper
+        this.todoWrapper.appendChild(todoMenu);
+    }
+
+    _genTodoUi({ id, title, status, priority, comments }) {
+        !document.querySelector('.todo-menu') ? this._genTodoMenu() : null;
         const todoDiv = document.createElement('div');
         const _todoRemoveBtn = document.createElement('button');
         const _content = document.createElement('div');
