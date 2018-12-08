@@ -89,10 +89,10 @@ class Store {
         this.todos.length = 0;
     }
 
-    _filter({ status, priority }) {
-        if (status) {
-            // filter by todo staus
-            const filtered = this.todos.filter(todo => todo.status === status.toLowerCase());
+    _filter({ status, priority, all }) {
+        if (status || all) {
+            // filter by todo status
+            const filtered = status ? store.todos.filter(todo => todo.status === status) : store.todos;
             // render each filtered todo to ui
             new Render(filtered);
 
@@ -208,17 +208,36 @@ class Render extends Store {
 
         this._toggleClass(todoMenu, 'todo-menu', 'add');
 
-        all.innerHTML = 'All';
-        active.innerHTML = 'Active';
-        completed.innerHTML = 'Completed';
+        all.innerText = 'All';
+        active.innerText = 'Active';
+        completed.innerText = 'Completed';
         
-        [all, active, completed].forEach(el => todoMenu.appendChild(el));
+        [all, active, completed].forEach(el => {
+            el.addEventListener('click', (e) => {
+                const value = e.currentTarget.innerText;
+                switch(value) {
+                    case 'All':
+                        this._filter({all: true});
+                        break;
+                    case 'Active':
+                        this._filter({status: false});
+                        break;
+                    case 'Completed': 
+                        this._filter({status: true});
+                        break;
+                }
+            });
+
+            todoMenu.appendChild(el);
+        });
         // append menu to todo wrapper
         this.todoWrapper.appendChild(todoMenu);
     }
 
     _genTodoUi({ id, title, status, priority, comments }) {
+        // generate the todo menu only if not already rendered
         !document.querySelector('.todo-menu') ? this._genTodoMenu() : null;
+
         const todoDiv = document.createElement('div');
         const _todoRemoveBtn = document.createElement('button');
         const _content = document.createElement('div');
