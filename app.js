@@ -42,7 +42,7 @@ class Store {
        } else {
            // retrieve stored todos
            const todoCached = JSON.parse(localStorage.getItem('store'));
-           todoCached.todos.length ? todoCached.todos.forEach(todo => new Render(todo)) : null;
+           todoCached.todos.length ? new Render(todoCached.todos) : null;
            // update store
            this.todos = todoCached.todos;
        }
@@ -190,7 +190,11 @@ class Render extends Store {
             if (!todo.length) {
                 this._toggleAttribute(this.todoWrapper, 'show', 'remove');
                 this._toggleAttribute(this.todoWrapper, 'hide', 'add', 'true');
+            } else {
+                this._toggleAttribute(this.todoWrapper, 'hide', 'remove');
+                this._toggleAttribute(this.todoWrapper, 'show', 'add', 'true');
             }
+
         } else {
             this.genTodoUi(todo);
         }
