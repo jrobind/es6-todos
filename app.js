@@ -4,10 +4,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const todoInput = document.querySelector('input');
     const todoVal = document.querySelector('#todoInput');
-    const removeBtn = document.querySelector('.remove-btn');
 
     // initiate store
     window.store = new Store();
+    // initiate widget
+    new Widget();
 
     // setup listeners
     todoInput.addEventListener('keydown', (e) => { 
@@ -16,12 +17,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// util class
+
+class Util {
+    _toggleClass(element, className, toggle) {
+        toggle === 'add' ? element.classList.add(className) : element.classList.remove(className);
+     }
+ 
+     _toggleAttribute(element, name, toggle, val) {
+         toggle === 'add' ? element.setAttribute(name, val) : element.removeAttribute(name);
+     }
+}
+
 // todo store
 
-class Store {
+class Store extends Util {
     constructor(check) {
-        this.todos = [];
+        super();
 
+        this.todos = [];
         !check ? this._initialiseStore() : null;
     }
 
@@ -239,35 +253,35 @@ class Render extends Store {
         !document.querySelector('.todo-menu') ? this._genTodoMenu() : null;
 
         const todoDiv = document.createElement('div');
-        const _todoRemoveBtn = document.createElement('button');
-        const _content = document.createElement('div');
-        const _status = document.createElement('div');
-        const _priority = document.createElement('div');
-        const _comments = document.createElement('div');
+        const todoRemoveBtn = document.createElement('button');
+        const content = document.createElement('div');
+        const todoStatus = document.createElement('div');
+        const todoPriority = document.createElement('div');
+        const todoComments = document.createElement('div');
 
         this._reset('input');
 
         // setup element classes and attributes
         this._toggleAttribute(todoDiv, 'uid', 'add', id,);
         this._toggleAttribute(todoDiv, 'priority', 'add', priority);
-        this._toggleClass(_todoRemoveBtn, 'remove-btn', 'add');
+        this._toggleClass(todoRemoveBtn, 'remove-btn', 'add');
         this._toggleClass(todoDiv, 'todo', 'add');
-        this._toggleClass(_content, 'todo-content', 'add');
-        this._toggleClass(_status, 'todo-status', 'add');
-        this._toggleClass(_priority, 'todo-priority', 'add');
-        this._toggleClass(_comments, 'todo-comments', 'add');
+        this._toggleClass(content, 'todo-content', 'add');
+        this._toggleClass(todoStatus, 'todo-status', 'add');
+        this._toggleClass(todoPriority, 'todo-priority', 'add');
+        this._toggleClass(todoComments, 'todo-comments', 'add');
 
         // setup listeners
-        _todoRemoveBtn.addEventListener('click', (e) => store._removeTodo(e.currentTarget.parentElement.getAttribute('uid')));
+        todoRemoveBtn.addEventListener('click', (e) => store._removeTodo(e.currentTarget.parentElement.getAttribute('uid')));
 
-        _todoRemoveBtn.innerText = 'x';
-        _content.innerHTML = title;
-        _status.innerHTML = status;
-        _priority.innerHTML = priority;
-        _comments.innerHTML = comments;
+        todoRemoveBtn.innerText = 'x';
+        content.innerHTML = title;
+        todoStatus.innerHTML = status;
+        todoPriority.innerHTML = priority;
+        todoComments.innerHTML = comments;
         
         // append todo data
-        [_todoRemoveBtn, _content, _status, _priority, _comments].forEach(d => todoDiv.appendChild(d));
+        [todoRemoveBtn, content, todoStatus, todoPriority, todoComments].forEach(d => todoDiv.appendChild(d));
 
         // set attribute to todo-wrapper so we can toggle its display
         if ( typeof store !== 'undefined') {
@@ -278,19 +292,41 @@ class Render extends Store {
         this.todoWrapper.appendChild(todoDiv);
     }
 
-    _toggleClass(element, className, toggle) {
-       toggle === 'add' ? element.classList.add(className) : element.classList.remove(className);
-    }
-
-    _toggleAttribute(element, name, toggle, val) {
-        toggle === 'add' ? element.setAttribute(name, val) : element.removeAttribute(name);
-    }
-
     _reset(type) {
         if (type === 'input') {
             document.querySelector('input').value = '';
         } else {
             this.todoWrapper.innerHTML = '';
         }
+    }
+}
+
+class Widget extends Store {
+    constructor() {
+        super();
+
+        this.widgetEl = document.querySelector('.info-widget');
+        this.widgetBtn = document.querySelector('#widgetBtn');
+        // append html entity
+        this.widgetBtn.innerHTML = '&lt;';
+        // setup listener
+        this.widgetBtn.addEventListener('click', this._handleWidgetClick.bind(this));
+    }
+
+    _handleWidgetClick() {
+        if (this.widgetEl.classList.contains('hide')) {
+            this.widgetBtn.innerHTML = '&gt;';
+
+            this._toggleClass(this.widgetEl, 'hide', 'remove');
+            this._toggleClass(this.widgetEl, 'show', 'add');
+        } else {
+            this.widgetBtn.innerHTML = '&lt;';
+
+            this._toggleClass(this.widgetEl, 'show', 'remove');
+            this._toggleClass(this.widgetEl, 'hide', 'add');
+        }
+    }
+
+    _populateWidgetData() {
     }
 }
