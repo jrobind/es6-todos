@@ -8,6 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     margin: 0;
+    overflow-x: hidden;
 }
 
 .info-widget {
@@ -19,6 +20,13 @@ body {
     z-index: 1;
     border-radius: 5px;
 
+    #widgetBtn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: -26px;
+    }
+
     div {
         margin: 5px 0;
     }
@@ -26,6 +34,11 @@ body {
 
 .info-widget.show {
     right: 0;
+    transition: right .2s linear;
+}
+
+.info-widget.hide {
+    right: -150px;
     transition: right .2s linear;
 }
 

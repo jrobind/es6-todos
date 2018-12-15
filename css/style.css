@@ -6,7 +6,8 @@ body {
   font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   display: flex;
   flex-direction: column;
-  margin: 0; }
+  margin: 0;
+  overflow-x: hidden; }
 
 .info-widget {
   background: white;
@@ -16,11 +17,20 @@ body {
   padding: 15px;
   z-index: 1;
   border-radius: 5px; }
+  .info-widget #widgetBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -26px; }
   .info-widget div {
     margin: 5px 0; }
 
 .info-widget.show {
   right: 0;
+  transition: right .2s linear; }
+
+.info-widget.hide {
+  right: -150px;
   transition: right .2s linear; }
 
 .wrapper {
