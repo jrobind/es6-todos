@@ -42,11 +42,11 @@ class Store extends Util {
     getTodoInfo_(query) {
         switch(query) {
             case 'total': 
-                return this.todos.length;
+                return store.todos.length;
             case 'total-completed': 
-                return this.todos.filter(todo => todo.status).length;
+                return store.todos.filter(todo => todo.status).length;
             case 'total-uncompleted': 
-            return this.todos.filter(todo => !todo.status).length;
+            return store.todos.filter(todo => !todo.status).length;
         }
     }
 
@@ -307,6 +307,12 @@ class Widget extends Store {
 
         this.widgetEl = document.querySelector('.info-widget');
         this.widgetBtn = document.querySelector('#widgetBtn');
+        this.infoWidgetTodos = document.querySelector('.info-widget-todos');
+        this.infoWidgetCompleted = document.querySelector('info-widget-completed');
+        this.infoWidgetUncompleted = document.querySelector('info-widget-uncompleted');
+        this.infoWidgetLow = document.querySelector('info-widget-low');
+        this.infoWidgetMedium = document.querySelector('info-widget-medium');
+        this.infoWidgetHigh = document.querySelector('info-widget-high');
         // append html entity
         this.widgetBtn.innerHTML = '&lt;';
         // setup listener
@@ -314,6 +320,9 @@ class Widget extends Store {
     }
 
     _handleWidgetClick() {
+        // populate with current todo data
+        this._populateWidgetData();
+
         if (this.widgetEl.classList.contains('hide')) {
             this.widgetBtn.innerHTML = '&gt;';
 
@@ -328,5 +337,14 @@ class Widget extends Store {
     }
 
     _populateWidgetData() {
+        const infoElStr = ['total', 'todo-completed', 'todo-uncompleted', 'info-widget-low', 'info-widget-medium', 'info-widget-high'];
+        const infoEls = [this.infoWidgetTodos, this.infoWidgetCompleted, this.infoWidgetUncompleted, this.infoWidgetLow, this.infoWidgetMedium, this.infoWidgetHigh];
+        const vals = infoElStr.map(el => this.getTodoInfo_(el));
+        // render todo info
+        vals.forEach((val, i) => {
+            if (val) {
+                infoEls[i].innerText = val;
+            } 
+        });
     }
 }
