@@ -46,7 +46,13 @@ class Store extends Util {
             case 'total-completed': 
                 return store.todos.filter(todo => todo.status).length;
             case 'total-uncompleted': 
-            return store.todos.filter(todo => !todo.status).length;
+                return store.todos.filter(todo => !todo.status).length;
+            case 'low-priority': 
+                return store.todos.filter(todo => todo.priority === 'low').length;
+            case 'medium-priority': 
+                return store.todos.filter(todo => todo.priority === 'medium').length;
+            case 'high-priority': 
+                return store.todos.filter(todo => todo.priority === 'high').length;
         }
     }
 
@@ -85,6 +91,7 @@ class Store extends Util {
     _addTodo(todo) {
         this.todos.push(todo);
         this._updateStorage(todo);
+        this._forceTrigger();
     }
 
     _removeTodo(id) {
@@ -97,13 +104,16 @@ class Store extends Util {
         this._updateStorage(this.todos);
         // render updated todos
         new Render(this.todos);
-        debugger;
-        // close the widget, if open
-        document.querySelector('#widgetBtn').dispatchEvent(new CustomEvent('click', {'detail': 'terminate'}));
+        this._forceTrigger();
     }
 
     _removeAllTodos() {
         this.todos.length = 0;
+    }
+
+    _forceTrigger() {
+        // close the widget, if open
+        document.querySelector('#widgetBtn').dispatchEvent(new CustomEvent('click', {'detail': 'terminate'}));
     }
 
     _filter({ status, priority, all }) {
@@ -311,11 +321,11 @@ class Widget extends Store {
         this.widgetEl = document.querySelector('.info-widget');
         this.widgetBtn = document.querySelector('#widgetBtn');
         this.infoWidgetTodos = document.querySelector('.info-widget-todos');
-        this.infoWidgetCompleted = document.querySelector('info-widget-completed');
-        this.infoWidgetUncompleted = document.querySelector('info-widget-uncompleted');
-        this.infoWidgetLow = document.querySelector('info-widget-low');
-        this.infoWidgetMedium = document.querySelector('info-widget-medium');
-        this.infoWidgetHigh = document.querySelector('info-widget-high');
+        this.infoWidgetCompleted = document.querySelector('.info-widget-completed');
+        this.infoWidgetUncompleted = document.querySelector('.info-widget-uncompleted');
+        this.infoWidgetLow = document.querySelector('.info-widget-low');
+        this.infoWidgetMedium = document.querySelector('.info-widget-medium');
+        this.infoWidgetHigh = document.querySelector('.info-widget-high');
         // append html entity
         this.widgetBtn.innerHTML = '&lt;';
         // setup listener
@@ -341,12 +351,12 @@ class Widget extends Store {
     }
 
     _populateWidgetData() {
-        const infoElStr = ['total', 'todo-completed', 'todo-uncompleted', 'info-widget-low', 'info-widget-medium', 'info-widget-high'];
+        const infoElStr = ['total', 'total-completed', 'total-uncompleted', 'low-priority', 'medium-priority', 'high-priority'];
         const infoEls = [this.infoWidgetTodos, this.infoWidgetCompleted, this.infoWidgetUncompleted, this.infoWidgetLow, this.infoWidgetMedium, this.infoWidgetHigh];
         const vals = infoElStr.map(el => this.getTodoInfo_(el));
         // render todo info
         vals.forEach((val, i) => {
-            if (val) {
+            if (val !== undefined) {
                 infoEls[i].innerText = val;
             } 
         });
