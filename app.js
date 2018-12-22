@@ -97,6 +97,9 @@ class Store extends Util {
         this._updateStorage(this.todos);
         // render updated todos
         new Render(this.todos);
+        debugger;
+        // close the widget, if open
+        document.querySelector('#widgetBtn').dispatchEvent(new CustomEvent('click', {'detail': 'terminate'}));
     }
 
     _removeAllTodos() {
@@ -319,10 +322,11 @@ class Widget extends Store {
         this.widgetBtn.addEventListener('click', this._handleWidgetClick.bind(this));
     }
 
-    _handleWidgetClick() {
+    _handleWidgetClick(e) {
         // populate with current todo data
         this._populateWidgetData();
-
+        // if event is manually dispatched we wish to update data but not class names
+        if (e.detail === 'terminate') { return }
         if (this.widgetEl.classList.contains('hide')) {
             this.widgetBtn.innerHTML = '&gt;';
 
