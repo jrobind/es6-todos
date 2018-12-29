@@ -1,4 +1,4 @@
 # es6-todos
 
 * Set up tests
-* Persist todos to Local Storage
+* Selecting a filter should not remove filter menu from display

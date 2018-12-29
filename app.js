@@ -207,7 +207,12 @@ class Render extends Store {
         super(true);
 
         this.todoWrapper = document.querySelector('.todo-wrapper');
+        this.todoMenu = document.querySelector('.todo-menu');
         this.todo = todo;
+
+        if (this.todoMenu && this.todoMenu.hasAttribute('active') && !todo.length) {
+            this._genTodoUi(todo);
+        }
 
         if (Array.isArray(todo)) {
             this._reset();
@@ -244,12 +249,15 @@ class Render extends Store {
                 const value = e.currentTarget.innerText;
                 switch(value) {
                     case 'All':
+                        todoMenu.setAttribute('active', true);
                         this._filter({all: true});
                         break;
                     case 'Active':
+                        todoMenu.setAttribute('active', true);
                         this._filter({status: false});
                         break;
-                    case 'Completed': 
+                    case 'Completed':
+                        todoMenu.setAttribute('active', true); 
                         this._filter({status: true});
                         break;
                 }
@@ -262,8 +270,13 @@ class Render extends Store {
     }
 
     _genTodoUi({ id, title, status, priority, comments }) {
-        // generate the todo menu only if not already rendered
-        !document.querySelector('.todo-menu') ? this._genTodoMenu() : null;
+        // generate the todo menu only if not already rendered and if not currently active
+        if (!this.todoMenu) {
+            this._genTodoMenu()
+        } else {
+            // menu does exist, then check for presence of active attribute
+            this.todoMenu.hasAttribute('active') ? this._genTodoMenu() : null;
+        }
 
         const todoDiv = document.createElement('div');
         const todoRemoveBtn = document.createElement('button');
