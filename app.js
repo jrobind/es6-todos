@@ -211,7 +211,9 @@ class Render extends Store {
         this.todo = todo;
 
         if (this.todoMenu && this.todoMenu.hasAttribute('active') && !todo.length) {
+            this._reset();
             this._genTodoUi(todo);
+            return;
         }
 
         if (Array.isArray(todo)) {
@@ -276,6 +278,7 @@ class Render extends Store {
         } else {
             // menu does exist, then check for presence of active attribute
             this.todoMenu.hasAttribute('active') ? this._genTodoMenu() : null;
+            return;
         }
 
         const todoDiv = document.createElement('div');
