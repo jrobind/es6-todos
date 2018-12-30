@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.store = new Store();
     // initiate widget
     new Widget();
+    // initiate filter menu
+    new TodoMenu();
 
     // setup listeners
     todoInput.addEventListener('keydown', (e) => { 
@@ -117,7 +119,7 @@ class Store extends Util {
     }
 
     _filter({ status, priority, all }) {
-        if (status || all) {
+        if (status || !status || all) {
             // filter by todo status
             const filtered = status ? store.todos.filter(todo => todo.status === status) : store.todos;
             // render each filtered todo to ui
@@ -125,7 +127,7 @@ class Store extends Util {
 
         } else {
             // filter by todo priority
-            const filtered = this.todos.filter(todo => todo.priority === priority.toLowerCase());
+            const filtered = store.todos.filter(todo => todo.priority === priority.toLowerCase());
             // render each filtered todo to ui
             new Render(filtered);
         }
@@ -234,53 +236,7 @@ class Render extends Store {
         }
     }
 
-    _genTodoMenu() {
-        const todoMenu = document.createElement('div');
-        const all = document.createElement('div');
-        const active = document.createElement('div');
-        const completed = document.createElement('div');
-
-        this._toggleClass(todoMenu, 'todo-menu', 'add');
-
-        all.innerText = 'All';
-        active.innerText = 'Active';
-        completed.innerText = 'Completed';
-        
-        [all, active, completed].forEach(el => {
-            el.addEventListener('click', (e) => {
-                const value = e.currentTarget.innerText;
-                switch(value) {
-                    case 'All':
-                        todoMenu.setAttribute('active', true);
-                        this._filter({all: true});
-                        break;
-                    case 'Active':
-                        todoMenu.setAttribute('active', true);
-                        this._filter({status: false});
-                        break;
-                    case 'Completed':
-                        todoMenu.setAttribute('active', true); 
-                        this._filter({status: true});
-                        break;
-                }
-            });
-
-            todoMenu.appendChild(el);
-        });
-        // append menu to todo wrapper
-        this.todoWrapper.appendChild(todoMenu);
-    }
-
     _genTodoUi({ id, title, status, priority, comments }) {
-        // generate the todo menu only if not already rendered and if not currently active
-        if (!this.todoMenu) {
-            this._genTodoMenu()
-        } else {
-            // menu does exist, then check for presence of active attribute
-            this.todoMenu.hasAttribute('active') ? this._genTodoMenu() : null;
-            return;
-        }
-
         const todoDiv = document.createElement('div');
         const todoRemoveBtn = document.createElement('button');
         const content = document.createElement('div');
@@ -289,6 +245,7 @@ class Render extends Store {
         const todoComments = document.createElement('div');
 
         this._reset('input');
+        !this.todoMenu ? new TodoMenu() : null;
 
         // setup element classes and attributes
         this._toggleAttribute(todoDiv, 'uid', 'add', id,);
@@ -329,6 +286,53 @@ class Render extends Store {
         }
     }
 }
+
+// filter menu class
+
+class TodoMenu extends Store {
+    constructor() {
+        super(true);
+
+        this.todoWrapper = document.querySelector('.todo-wrapper');
+        this.todoMenu = document.querySelector('.todo-menu');
+        this._genTodoMenu();
+    }
+    _genTodoMenu() {
+        const todoMenu = document.createElement('div');
+        const all = document.createElement('div');
+        const active = document.createElement('div');
+        const completed = document.createElement('div');
+    
+        this._toggleClass(todoMenu, 'todo-menu', 'add');
+    
+        all.innerText = 'All';
+        active.innerText = 'Active';
+        completed.innerText = 'Completed';
+        
+        [all, active, completed].forEach(el => {
+            el.addEventListener('click', (e) => {
+                const value = e.currentTarget.innerText;
+                switch(value) {
+                    case 'All':
+                        this._filter({all: true});
+                        break;
+                    case 'Active':
+                        this._filter({status: false});
+                        break;
+                    case 'Completed':
+                        this._filter({status: true});
+                        break;
+                }
+            });
+    
+            todoMenu.appendChild(el);
+        });
+        // append menu to todo wrapper
+        this.todoWrapper.appendChild(todoMenu);
+    }
+}
+
+// data widget class
 
 class Widget extends Store {
     constructor() {
