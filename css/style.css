@@ -16,7 +16,8 @@ body {
   right: 0;
   padding: 15px;
   z-index: 1;
-  border-radius: 5px; }
+  border-radius: 5px;
+  border: 1px solid black; }
   .info-widget #widgetBtn {
     position: absolute;
     top: 50%;
